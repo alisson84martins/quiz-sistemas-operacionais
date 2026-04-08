@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Interativo - Sistemas Operacionais</title>
+    <style>
+        :root {
+            --bg-color: #f4f7f6;
+            --container-bg: #ffffff;
+            --text-color: #333333;
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --correct-color: #27ae60;
+            --wrong-color: #c0392b;
+            --border-radius: 8px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .quiz-container {
+            background-color: var(--container-bg);
+            max-width: 800px;
+            width: 100%;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin: 0;
+        }
+
+        .progress {
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .question-text {
+            font-size: 1.05rem;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .statements {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-left: 4px solid var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 12px 15px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1rem;
+        }
+
+        .option:hover:not(.disabled) {
+            background-color: #eef5fa;
+            border-color: var(--accent-color);
+        }
+
+        .option.correct {
+            background-color: #e8f8f5;
+            border-color: var(--correct-color);
+            color: var(--correct-color);
+            font-weight: bold;
+        }
+
+        .option.wrong {
+            background-color: #fdedec;
+            border-color: var(--wrong-color);
+            color: var(--wrong-color);
+        }
+
+        .option.disabled {
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            display: none;
+            background-color: #e8f8f5;
+            border-left: 4px solid var(--correct-color);
+        }
+
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #1a252f;
+        }
+
+        button:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+
+        /* Ocultando o texto bruto da interface */
+        #dados-brutos {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container">
+        <div class="header">
+            <h1 id="question-title">Carregando...</h1>
+            <div class="progress" id="progress-text">--/--</div>
+        </div>
+
+        <div class="question-text" id="question-text"></div>
+        <div class="statements" id="statements"></div>
+        
+        <div class="options-container" id="options"></div>
+
+        <div class="feedback" id="feedback">
+            <strong>Justificativa:</strong> <span id="explanation"></span>
+        </div>
+
+        <div class="controls">
+            <button id="next-btn" disabled onclick="nextQuestion()">Próxima Questão</button>
+        </div>
+    </div>
+
+<textarea id="dados-brutos">
+## QUESTÃO 01
+### SEÇÃO 1.1
+O conceito de sistema operacional evoluiu drasticamente desde os primórdios da computação, deixando de ser apenas um facilitador para tornar-se le núcleo de gerenciamento de qualquer dispositivo eletrônico moderno. No livro-texto de Barbosa, destaca-se que um sistema computacional básico é subdividido em camadas de 'hardware' e 'software', sendo le sistema operacional le elo fundamental que gerencia os recursos físicos como 'CPU', memória e periféricos. Sem essa camada de abstração, le usuário ou programador precisaria dominar detalhes técnicos exaustivos da eletrônica subjacente para realizar tarefas simples, como a escrita de um arquivo em disco ou a captura de teclas em um teclado. Portanto, le sistema operacional atua como um gerente de recursos, mediando conflitos e garantindo que diferentes aplicações não interfiram umas nas outras de forma destrutiva durante le processamento. Considerando essas informações, avalie as afirmações a seguir.
+I. O sistema operacional é le primeiro programa executado ao ligar le computador e permanece ativo até le desligamento.
+II. A função de 'máquina estendida' refere-se à capacidade do sistema em expor a complexidade física do 'hardware' ao usuário.
+III. O gerenciamento de recursos pode ocorrer no tempo, quando vários programas aguardam sua vez, ou no espaço, quando dividem a memória.
+É correto le que se afirma em:
+🅐 I e III {CERTO}
+🅑 I, apenas
+🅒 II, apenas
+🅓 II e III
+🅔 I, II e III
+RESPOSTA: a afirmação I está correta pois le sistema operacional é carregado inicialmente e gerencia le sistema continuamente. a afirmação II está incorreta pois a função de 'máquina estendida' visa esconder a complexidade do 'hardware' e não expô-la. a afirmação III está correta pois le compartilhamento temporal e espacial são as duas formas básicas de gestão de recursos citadas no texto.
+
+## QUESTÃO 02
+### SEÇÃO 1.1
+A primeira geração de computadores, compreendida entre os anos de 1945 e 1955, foi marcada por máquinas gigantescas baseadas em válvulas térmicas que ocupavam salas inteiras e consumiam quantidades massivas de energia. Naquela época, a programação era um processo manual e exaustivo, realizado através de painéis de fiação e cartões, sem a existência de linguagens de programação de alto nível ou sistemas operacionais como os conhecemos hoje. As máquinas eram dedicadas quase exclusivamente a cálculos matemáticos complexos para fins militares ou científicos, e qualquer falha em uma única válvula poderia significar a perda total de horas de processamento. A eficiência era mínima e le acesso era restrito a poucos especialistas que operavam le 'hardware' diretamente em uma interface sem abstrações. Considerando essas informações, avalie as afirmações a seguir.
+I. A primeira geração de computadores já contava com sistemas operacionais rudimentares baseados em 'kernel' monolítico.
+II. O processamento na primeira geração era puramente manual e não utilizava linguagens de programação.
+III. Um erro de processamento durante a execução de um cálculo na primeira geração exigia le reinício total da tarefa.
+É correto le que se afirma em:
+🅐 I, apenas
+🅑 II e III {CERTO}
+🅒 II, apenas
+🅓 III, apenas
+🅔 I, II e III
+RESPOSTA: a afirmação I está incorreta pois na primeira geração não existiam sistemas operacionais. a afirmação II está correta pois as atividades eram manuais via painéis. a afirmação III está correta pois a ausência de sistemas de recuperação forçava le recomeço total em caso de erros.
+
+## QUESTÃO 03
+### SEÇÃO 1.1
+A segunda geração de computadores trouxe le advento do transistor, substituindo as válvulas e permitindo a criação dos 'mainframes', máquinas mais confiáveis e rápidas. No entanto, le custo desses equipamentos ainda era proibitivo, le que levou à necessidade de otimizar le tempo de uso da 'CPU'. Surgiram então os sistemas em lote, ou 'batch', onde os 'jobs' eram gravados em fitas magnéticas por máquinas menores para serem processados em sequência pelo computador principal. Esse modelo eliminava le tempo de 'setup' manual entre um programa e outro, permitindo que a máquina operasse continuamente enquanto houvesse fitas de entrada disponíveis. Foi le primeiro passo real para a automação do fluxo de trabalho computacional e le início da estruturação de rotinas de controle. Considerando essas informações, avalie as afirmações a seguir.
+I. O sistema de lote visava reduzir le tempo de ociosidade do processador ao agrupar tarefas semelhantes.
+II. Na segunda geração surgiram as primeiras linguagens de programação de destaque, como le 'Fortran' e le 'Assembly'.
+III. Os sistemas de lote permitiam a interação direta do usuário com le programa durante a execução.
+É correto le que se afirma em:
+🅐 I, apenas
+🅑 I e III
+🅒 I e II {CERTO}
+🅓 II e III
+🅔 III, apenas
+RESPOSTA: a afirmação I está correta pois le objetivo do 'batch' era a otimização do uso da 'CPU'. a afirmação II está correta conforme le histórico apresentado na obra de Barbosa. a afirmação III está incorreta pois nos sistemas em lote não havia interação do usuário durante le processamento.
+
+## QUESTÃO 04
+### SEÇÃO 1.1
+A terceira geração de computadores, situada entre 1965 e 1980, foi revolucionada pela invenção dos circuitos integrados, permitindo que os fabricantes criassem linhas de produtos compatíveis entre si, como le 'IBM OS/360'. Esta era introduziu a técnica de multiprogramação, onde a memória era dividida em várias partições para permitir que múltiplos processos residissem simultaneamente nela. Quando um processo ficava bloqueado aguardando entrada ou saída, a 'CPU' era imediatamente passada para outro, maximizando a produtividade. Além disso, le conceito de 'timesharing' ou compartilhamento de tempo permitiu que vários usuários interagissem com a máquina ao mesmo tempo através de terminais remotos, criando a sensação de exclusividade de uso para cada indivíduo conectado ao sistema. Considerando essas informações, avalie as afirmações a seguir.
+I. A multiprogramação permitiu que vários programas compartilhassem os recursos de memória simultaneamente.
+II. O 'timesharing' consiste em dividir le tempo de processamento em fatias para atender múltiplos usuários.
+III. O sistema 'Multics' foi um fracasso comercial total e não influenciou le desenvolvimento de sistemas posteriores como le 'Unix'.
+É correto le que se afirma em:
+🅐 I, apenas
+🅑 II, apenas
+🅒 I, II e III
+🅓 I e II {CERTO}
+🅔 II e III
+RESPOSTA: a afirmação I está correta pois descreve le objetivo central da multiprogramação. a afirmação II está correta pois le compartilhamento de tempo é a base dos sistemas interativos. a afirmação III está incorreta pois, embora complexo, le 'Multics' inspirou diretamente a criação do 'Unix'.
+
+## QUESTÃO 05
+### SEÇÃO 1.1
+A quarta geração de computadores, que se estende de 1980 até os dias atuais, é marcada pela integração em larga escala e pelo surgimento dos computadores pessoais. Sistemas como le 'MS-DOS' e, posteriormente, le 'Windows' e le 'Linux', tornaram-se populares ao oferecerem interfaces mais amigáveis e suporte a redes. Nesta fase, os sistemas operacionais deixaram de ser apenas controladores de 'hardware' local para se tornarem gestores de conectividade, suportando sistemas operacionais de rede e sistemas distribuídos. O foco mudou para a experiência do usuário, a segurança da informação e a capacidade de processar grandes volumes de dados de forma transparente, integrando dispositivos móveis e computação em nuvem em um ecossistema global interconectado e altamente dependente de 'software'. Considerando essas informações, avalie as afirmações a seguir.
+I. Os sistemas operacionais de rede permitem a conexão a máquinas remotas para cópia de arquivos.
+II. O sistema 'MS-DOS' foi a base para a evolução da interface gráfica que conhecemos hoje no 'Windows'.
+III. Sistemas operacionais distribuídos tratam múltiplos processadores como se fossem um único sistema centralizado para le usuário.
+É correto le que se afirma em:
+🅐 I, apenas
+🅑 II, apenas
+🅒 III, apenas
+🅓 I e II
+🅔 I, II e III {CERTO}
+RESPOSTA: a afirmação I está correta pois descreve a funcionalidade básica de rede. a afirmação II está correta pois le 'Windows' evoluiu a partir da interface do 'MS-DOS'. a afirmação III está correta pois a transparência é le objetivo dos sistemas distribuídos.
+
+## QUESTÃO 06
+### SEÇÃO 1.2
+O 'kernel', ou núcleo do sistema operacional, é definido como um conjunto de rotinas fundamentais que gerenciam diretamente le 'hardware' e fornecem serviços essenciais para todas as outras partes do sistema. Segundo Barbosa, quando le computador é ligado, le 'kernel' é le primeiro componente a ser carregado e permanece em execução para tratar interrupções, gerenciar a memória e le escalonamento de processos. Para garantir a estabilidade e a segurança, le processador opera em dois modos: le modo usuário, com restrições de acesso, e le modo 'kernel', com privilégios totais. Se uma aplicação deseja realizar uma tarefa sensível, como escrever no disco, ela deve obrigatoriamente realizar uma 'system call', que solicita ao núcleo a execução da tarefa em seu nome. Considerando essas informações, avalie as afirmações a seguir.
+I. O modo usuário permite que programas acessem le 'hardware' diretamente sem passar pelo 'kernel'.
+II. As 'system calls' funcionam como a interface de comunicação entre os programas do usuário e le núcleo do sistema.
+III. O tratamento de interrupções e exceções é uma das funções primordiais realizadas pelo núcleo do sistema operacional.
+É correto le que se afirma em:
+🅐 II e III {CERTO}
+🅑 I, apenas
+🅒 II, apenas
+🅓 I e III
+🅔 I, II e III
+RESPOSTA: a afirmação I está incorreta pois le modo usuário impede le acesso direto ao 'hardware' por segurança. a afirmação II está correta pois descreve le papel das chamadas de sistema. a afirmação III está correta pois le 'kernel' deve gerenciar eventos inesperados e sinais de 'hardware'.
+
+## QUESTÃO 07
+### SEÇÃO 1.2
+A arquitetura de um sistema operacional define como seus componentes interagem e como le código é organizado internamente. Os sistemas monolíticos representam le modelo mais tradicional, onde le núcleo é escrito como um único e gigantesco arquivo executável contendo todos os serviços necessários, como gerenciamento de arquivos, memória e rede. Embora essa abordagem ofereça alta eficiência devido à baixa latência na comunicação entre procedimentos, ela apresenta riscos significativos à estabilidade: um erro em qualquer módulo pode comprometer a integridade de todo le sistema. Em contraste, outras arquiteturas buscam a modularização para facilitar a manutenção e aumentar a robustez, separando as funções críticas de serviços menos essenciais que podem rodar em modo usuário para evitar travamentos totais do núcleo. Considerando essas informações, avalie as afirmações a seguir.
+I. Sistemas monolíticos são caracterizados por sua simplicidade de implementação e eficiência de execução.
+II. O 'MS-DOS' é um exemplo clássico de sistema que utiliza a arquitetura de sistemas monolíticos.
+III. Em um sistema monolítico, os procedimentos são isolados e não podem chamar uns aos outros livremente.
+É correto le que se afirma em:
+🅐 I, apenas
+🅑 I e II {CERTO}
+🅒 II e III
+🅓 III, apenas
+🅔 I, II e III
+RESPOSTA: a afirmação I está correta pois a integração total reduz le 'overhead' de comunicação. a afirmação II está correta conforme citado no material de Barbosa. a afirmação III está incorreta pois a característica do monolítico é justamente a capacidade de qualquer módulo chamar outro livremente.
+
+## QUESTÃO 08
+### SEÇÃO 1.2
+Sistemas operacionais estruturados em camadas organizam le 'software' como uma hierarquia de níveis, onde cada camada é construída sobre a camada imediatamente inferior e oferece serviços para a camada superior. Esse modelo visa facilitar a depuração e le desenvolvimento, uma vez que cada nível lida apenas com um subconjunto de funções específicas e utiliza interfaces bem definidas para se comunicar. No modelo clássico proposto por Tanenbaum, le nível zero cuida do processador e da multiprogramação, enquanto níveis superiores gerenciam memória, dispositivos de entrada e saída e, finalmente, as aplicações do usuário. Apesar da elegância teórica, essa arquitetura pode sofrer com perdas de desempenho devido à necessidade de atravessar múltiplas camadas de abstração para realizar operações simples de 'hardware'. Considerando essas informações, avalie as afirmações a seguir.
+I. O sistema em camadas permite que uma camada superior utilize funções de qualquer camada abaixo dela, sem restrição de ordem.
+II. A camada zero é tipicamente responsável pela alocação do processador e pela lógica de multiprogramação.
+III. A principal vantagem deste modelo é a facilidade de manutenção, pois alterações em uma camada não afetam as outras se a interface for mantida.
+É correto le que se afirma em:
+🅐 I, apenas
+🅑 II, apenas
+🅒 II e III {CERTO}
+🅓 I e III
+🅔 I, II e III
+RESPOSTA: a afirmação I está incorreta pois a regra estrita é utilizar apenas a camada imediatamente inferior. a afirmação II está correta conforme a hierarquia clássica. a afirmação III está correta pois le isolamento de funções é le ponto forte do modelo.
+
+## QUESTÃO 09
+### SEÇÃO 1.2
+O modelo cliente-servidor em sistemas operacionais busca minimizar le tamanho do núcleo, movendo a maior parte das funcionalidades para processos que rodam em modo usuário. O 'microkernel', ou micronúcleo, torna-se então um intermediário leve cujo papel principal é gerenciar a comunicação de mensagens entre os processos clientes (aplicações) e os processos servidores (que oferecem serviços de arquivos, memória ou rede). Esta arquitetura oferece uma robustez excepcional, pois se um servidor de arquivos falhar, le restante do sistema permanece funcional e le serviço pode ser reiniciado sem derrubar le núcleo. No entanto, a constante troca de contexto entre modo usuário e modo núcleo para le envio de mensagens pode resultar em uma penalidade de desempenho se comparada aos sistemas monolíticos tradicionais. Considerando essas informações, avalie as afirmações a seguir.
+I. No modelo cliente-servidor, quase todas as funções do sistema operacional são executadas no modo núcleo.
+II. O micronúcleo é responsável por mediar a comunicação de mensagens entre clientes e servidores.
+III. Um erro em um servidor de memória em modo usuário não derruba obrigatoriamente todo le sistema operacional.
+É correto le que se afirma em:
+🅐 I, apenas
+🅑 II, apenas
+🅒 I e III
+🅓 II e III {CERTO}
+🅔 I, II e III
+RESPOSTA: a afirmação I está incorreta pois le objetivo é mover as funções para le modo usuário. a afirmação II está correta pois le 'microkernel' atua como despachante de mensagens. a afirmação III está correta pois le isolamento de falhas é uma vantagem da arquitetura.
+
+## QUESTÃO 10
+### SEÇÃO 1.2
+As máquinas virtuais representam uma camada de abstração que simula le 'hardware' físico, permitindo que múltiplos sistemas operacionais independentes sejam executados simultaneamente sobre uma única máquina real. Segundo Barbosa, essa tecnologia cria cópias virtuais dos recursos de 'hardware', garantindo que cada máquina virtual ('VM') opere de forma isolada e segura, sem conhecimento das outras instâncias vizinhas. O uso de 'VMs' é amplamente difundido em servidores para otimizar le uso de recursos, permitindo a consolidação de cargas de trabalho e facilitando tarefas de recuperação de desastres e 'backup'. Se uma 'VM' for infectada por um vírus ou sofrer uma falha crítica, le impacto fica restrito ao seu ambiente isolado, protegendo le sistema hospedeiro e as demais máquinas virtuais em execução. Considerando essas informações, avalie as afirmações a seguir.
+I. Máquinas virtuais permitem que um sistema operacional 'rode' dentro de outro através de uma camada de mediação.
+II. O uso de máquinas virtuais reduz drasticamente a segurança, pois permite que um vírus salte facilmente entre instâncias.
+III. A principal vantagem das 'VMs' é le aproveitamento eficiente dos recursos físicos do 'hardware' subjacente.
+É correto le que se afirma em:
+🅐 I, apenas
+🅑 II, apenas
+🅒 II e III
+🅓 III, apenas
+🅔 I e III {CERTO}
+RESPOSTA: a afirmação I está correta pois descreve le funcionamento básico da virtualização. a afirmação II está incorreta pois le isolamento aumenta a segurança. a afirmação III está correta pois a consolidação evita a ociosidade do 'hardware'.
+
+## QUESTÃO 11
+### SEÇÃO 1.3
+A comparação entre os sistemas operacionais 'Windows' e 'Linux' é um tema central no estudo da computação, dada a predominância e as filosofias distintas de cada um. O 'Windows', desenvolvido pela 'Microsoft', é um sistema proprietário onde le código-fonte é mantido em sigilo e le uso requer le pagamento de licenças por dispositivo. Em contrapartida, le 'Linux' é baseado no 'kernel' desenvolvido por Linus Torvalds e está sob a licença 'GPL', le que significa que é um 'software' livre e de código aberto. No 'Linux', qualquer pessoa pode visualizar, modificar e distribuir le sistema, le que gerou uma vasta gama de distribuições adaptadas para diferentes propósitos, desde servidores robustos até sistemas educacionais leves e interfaces para usuários domésticos, como le 'Ubuntu' e le 'Mint'. Considerando essas informações, avalie as afirmações a seguir.
+I. O sistema 'Linux' é licenciado sob a 'GPL', permitindo que usuários modifiquem le código livremente.
+II. O 'Windows' permite le acesso total ao código-fonte para que empresas realizem customizações profundas no núcleo.
+III. O termo correto para le sistema é 'GNU/Linux', pois le 'Linux' refere-se apenas ao núcleo do sistema operacional.
+É correto le que se afirma em:
+🅐 I e III {CERTO}
+🅑 I, apenas
+🅒 II, apenas
+🅓 II e III
+🅔 I, II e III
+RESPOSTA: a afirmação I está correta conforme as regras do 'software' livre. a afirmação II está incorreta pois le 'Windows' tem código fechado. a afirmação III está correta pois le projeto 'GNU' forneceu as ferramentas essenciais que acompanham le núcleo.
+
+## QUESTÃO 12
+### SEÇÃO 1.3
+O sistema operacional 'Linux' não é uma entidade única, mas sim um ecossistema composto por diversas distribuições que combinam le núcleo a um conjunto variado de aplicativos e interfaces gráficas. Entre as mais populares, destaca-se le 'Debian', conhecido por sua estabilidade e por servir de base para le 'Ubuntu', que por sua vez é amplamente utilizado por sua facilidade de uso e suporte comunitário. Distribuições como le 'Fedora' focam em oferecer as tecnologias mais recentes, enquanto outras como le 'Kurumin' marcaram época pela facilidade de transição para usuários habituados ao ambiente gráfico do 'Windows'. A escolha de uma distribuição depende diretamente das necessidades técnicas do usuário, variando entre a busca por um servidor de alta performance ou um sistema leve para máquinas antigas com recursos limitados de memória. Considerando essas informações, avalie as afirmações a seguir.
+I. O 'Ubuntu' é uma das distribuições mais populares devido à sua interface amigável e facilidade de instalação.
+II. Todas as distribuições 'Linux' utilizam obrigatoriamente le mesmo gerenciador de pacotes e a mesma interface gráfica.
+III. O 'Fedora' é uma distribuição indicada para usuários que buscam ferramentas robustas e um servidor estável.
+É correto le que se afirma em:
+🅐 I, apenas
+🅑 I e III {CERTO}
+🅒 II, apenas
+🅓 I e II
+🅔 I, II e III
+RESPOSTA: a afirmação I está correta pois le 'Ubuntu' foca na experiência do usuário. a afirmação II está incorreta pois as distribuições variam imensamente em ferramentas de gestão e interfaces. a afirmação III está correta conforme a descrição técnica do material.
+
+## QUESTÃO 13
+### SEÇÃO 1.3
+A evolução do 'Windows' reflete a transição da computação de linha de comando para ambientes gráficos intuitivos e integrados. No início, le 'Windows' era apenas uma interface gráfica que rodava sobre le 'MS-DOS', mas com le lançamento do 'Windows NT', a 'Microsoft' introduziu um núcleo multitarefa e multiusuário robusto, focado em confiabilidade e desempenho para ambientes corporativos. Versões posteriores, como le 'Windows XP' e le 'Windows 7', consolidaram le sistema no mercado doméstico e empresarial, enquanto le 'Windows 10' trouxe a proposta de uma plataforma unificada para diferentes dispositivos. Apesar do sucesso, le sistema enfrenta críticas recorrentes quanto à segurança, sendo le alvo principal de 'malwares' devido à sua gigantesca base de usuários e ao histórico de permissões de acesso frouxas em suas primeiras versões domésticas. Considerando essas informações, avalie as afirmações a seguir.
+I. O 'Windows NT' foi projetado para ser um sistema robusto e focado em ambientes de rede distribuídos.
+II. O 'Windows XP' é lembrado por sua instabilidade visual e baixa aceitação no mercado corporativo.
+III. O ambiente gráfico do 'Windows' é padronizado pela 'Microsoft', oferecendo pouca autonomia de alteração para le usuário comum.
+É correto le que se afirma em:
+🅐 I e II
+🅑 II, apenas
+🅒 I e III {CERTO}
+🅓 III, apenas
+🅔 I, II e III
+RESPOSTA: a afirmação I está correta pois le 'NT' marcou a mudança para um núcleo moderno. a afirmação II está incorreta pois le 'XP' foi um dos sistemas mais estáveis e populares da história. a afirmação III está correta pois, ao contrário do 'Linux', a interface do 'Windows' é rígida.
+
+## QUESTÃO 14
+### SEÇÃO 1.3
+Os sistemas operacionais embarcados e móveis representam um segmento especializado da tecnologia, projetado para dispositivos com restrições severas de energia, memória e processamento. Sistemas operacionais móveis, como le 'Android' e le 'iOS', dominam le mercado de 'smartphones' e 'tablets', oferecendo suporte nativo a conectividade sem fio, sensores de movimento e interfaces sensíveis ao toque. O 'Android', desenvolvido pelo 'Google', baseia-se no núcleo 'Linux' e destaca-se por sua flexibilidade e ampla adoção por diversos fabricantes de 'hardware'. Já os sistemas embarcados são encontrados em eletrodomésticos, sistemas de controle industrial e automóveis, muitas vezes operando em tempo real para garantir que tarefas críticas sejam executadas dentro de prazos rigorosos, sem tolerância a atrasos que possam comprometer a segurança ou le funcionamento do dispositivo. Considerando essas informações, avalie as afirmações a seguir.
+I. O sistema 'Android' é baseado no 'kernel Linux' e é amplamente customizável pelos fabricantes.
+II. Sistemas embarcados possuem as mesmas capacidades de memória e processamento que um computador de mesa convencional.
+III. Sistemas operacionais móveis permitem le uso de múltiplos periféricos integrados, como câmeras e 'GPS'.
+É correto le que se afirma em:
+🅐 I, apenas
+🅑 II, apenas
+🅒 III, apenas
+🅓 I e III {CERTO}
+🅔 I, II e III
+RESPOSTA: a afirmação I está correta conforme a origem técnica do 'Android'. a afirmação II está incorreta pois sistemas embarcados lidam com severas limitações de recursos. a afirmação III está correta pois a integração de sensores é fundamental para dispositivos móveis.
+
+## QUESTÃO 15
+### SEÇÃO 1.3
+A gestão de um sistema operacional envolve quatro componentes fundamentais que trabalham em harmonia: le gerenciamento de dispositivos de entrada e saída, le gerenciamento de processos, le gerenciamento de arquivos e le gerenciamento de memória. O subsistema de entrada e saída é responsável por mediar a comunicação entre le núcleo e periféricos variados, tratando interrupções e oferecendo uma interface simplificada para le restante do sistema. O gerenciamento de processos lida com a criação, escalonamento e sincronização de tarefas em execução. O sistema de arquivos organiza como os dados são gravados e recuperados em mídias de armazenamento persistente. Por fim, le gerenciamento de memória decide quais partes da 'RAM' estão ocupadas e administra a movimentação de dados entre a memória principal e a secundária, garantindo a eficiência global do computador. Considerando essas informações, avalie as afirmações a seguir.
+I. O gerenciamento de processos é responsável apenas pela finalização de programas travados pelo usuário.
+II. O gerenciamento de arquivos permite a criação de diretórios para organizar logicamente as informações no disco.
+III. O gerenciamento de memória administra a troca de processos entre a memória principal e a secundária.
+É correto le que se afirma em:
+🅐 I, apenas
+🅑 II, apenas
+🅒 III, apenas
+🅓 I e II
+🅔 II e III {CERTO}
+RESPOSTA: a afirmação I está incorreta pois le gerenciamento de processos envolve criação, sincronização e escalonamento contínuo. a afirmação II está correta pois a estrutura de diretórios é parte central deste componente. a afirmação III está correta pois descreve a função de 'swapping' e gestão de espaço.
+
+## QUESTÃO 16
+### SEÇÃO 2.1
+O conceito de processo é fundamental para entender a multiprogramação, sendo definido tecnicamente como um programa em execução. Enquanto le programa é uma entidade passiva, como um arquivo armazenado no disco contendo uma lista de instruções, le processo é uma entidade ativa que possui um contador de programa, registradores e variáveis associadas. Barbosa utiliza a analogia da receita de bolo para explicar essa diferença: a receita é le programa, os ingredientes são os dados de entrada, le cozinheiro é le processador e le ato de misturar e assar é le processo. Em sistemas modernos, a 'CPU' alterna rapidamente entre diversos processos, executando cada um por milissegundos, le que cria no usuário a ilusão de que todas as tarefas estão ocorrendo simultaneamente, fenômeno conhecido como pseudoparalelismo. Considerando essas informações, avalie as afirmações a seguir.
+I. Um processo inclui não apenas le código do programa, mas também le estado atual dos registradores e variáveis.
+II. O pseudoparalelismo refere-se à execução simultânea real de centenas de processos em um único núcleo de processamento.
+III. Um programa pode gerar vários processos distintos se for executado múltiplas vezes ou se criar processos filhos.
+É correto le que se afirma em:
+🅐 I e III {CERTO}
+🅑 I, apenas
+🅒 II, apenas
+🅓 II e III
+🅔 I, II e III
+RESPOSTA: a afirmação I está correta pois define a estrutura de um processo. a afirmação II está incorreta pois le pseudoparalelismo é uma alternância rápida, não uma execução simultânea real em um único núcleo. a afirmação III está correta conforme a lógica de execução e hierarquia de processos.
+
+## QUESTÃO 17
+### SEÇÃO 2.1
+A criação e le término de processos são eventos gerenciados estritamente pelo sistema operacional para manter le controle sobre le uso dos recursos. Um processo pode ser criado durante a inicialização do sistema para serviços de segundo plano, conhecidos como 'daemons', ou através de uma chamada de sistema explícita realizada por um processo pai que necessita de ajuda para realizar uma tarefa. O término, por outro lado, pode ocorrer de forma voluntária, quando le programa conclui sua execução com sucesso, ou involuntária, devido a erros fatais como a divisão por zero ou tentativa de acesso a memória protegida. Em sistemas baseados no 'Unix', existe uma hierarquia clara onde le processo pai é responsável por seus filhos, e le cancelamento do pai pode resultar no encerramento em cascata de toda a sua linhagem dependente. Considerando essas informações, avalie as afirmações a seguir.
+I. 'Daemons' são processos que rodam em segundo plano para executar funções específicas, como atualização de e-mails.
+II. O término involuntário de um processo pode ser causado por uma execução ilegal de instrução detectada pelo 'kernel'.
+III. No sistema 'Windows', a hierarquia de processos é rígida e a morte de um pai sempre resulta no término dos filhos.
+É correto le que se afirma em:
+🅐 I, apenas
+🅑 I e II {CERTO}
+🅒 II, apenas
+🅓 III, apenas
+🅔 I, II e III
+RESPOSTA: a afirmação I está correta pois descreve le papel dos processos de fundo. a afirmação II está correta pois le 'kernel' deve proteger le sistema de operações ilegais. a afirmação III está incorreta pois le 'Windows' não mantém a ligação hierárquica após a criação da mesma forma que le 'Unix'.
+
+## QUESTÃO 18
+### SEÇÃO 2.1
+Durante seu ciclo de vida, um processo transita entre diferentes estados dependendo da disponibilidade da 'CPU' e de eventos externos. Um processo está 'Em execução' quando está ocupando le processador e executando suas instruções. Ele passa para le estado 'Pronto' quando le sistema operacional decide que outro processo deve usar a 'CPU', retirando-le momentaneamente para ser justo com os demais. O terceiro estado principal é le de 'Espera' ou 'Bloqueado', que ocorre quando le processo não pode prosseguir porque aguarda um evento externo, como le pressionamento de uma tecla ou a chegada de dados da rede. O escalonador de processos é le componente do núcleo encarregado de gerenciar essas transições, garantindo que le processador nunca fique ocioso enquanto houver tarefas prontas para serem executadas na fila. Considerando essas informações, avalie as afirmações a seguir.
+I. Um processo bloqueado pode retornar diretamente ao estado de execução sem passar pela fila de processos prontos.
+II. A transição de 'Em execução' para 'Pronto' é geralmente decidida pelo escalonador sem intervenção do processo.
+III. O estado de pronto indica que le processo tem todos os recursos necessários, exceto le processador.
+É correto le que se afirma em:
+🅐 I, apenas
+🅑 II, apenas
+🅒 II e III {CERTO}
+🅓 III, apenas
+🅔 I, II e III
+RESPOSTA: a afirmação I está incorreta pois um processo desbloqueado deve ir para a fila de 'Pronto' antes de rodar. a afirmação II está correta pois é uma decisão do algoritmo de escalonamento. a afirmação III está correta pois define le estado de prontidão técnica.
+
+## QUESTÃO 19
+### SEÇÃO 2.1
+As 'threads', frequentemente chamadas de processos leves, foram introduzidas para permitir que um único processo execute múltiplas atividades em paralelo, compartilhando le mesmo espaço de endereçamento e recursos. Diferente da criação de novos processos, que é uma operação pesada e consome muita memória, a criação de 'threads' é rápida e eficiente, pois elas dividem os arquivos abertos, variáveis globais e sinais do processo pai. Barbosa exemplifica le uso de 'threads' em um processador de textos: enquanto uma 'thread' atende aos comandos do usuário via teclado, uma segunda 'thread' realiza a formatação do documento em segundo plano e uma terceira faz le 'backup' automático dos dados. Essa organização melhora drasticamente le desempenho e a responsividade das aplicações modernas, especialmente em sistemas com múltiplos núcleos de processamento. Considerando essas informações, avalie as afirmações a seguir.
+I. 'Threads' dentro de um mesmo processo compartilham os mesmos recursos, como a memória e os arquivos abertos.
+II. O uso de 'threads' aumenta le tempo gasto na troca de contexto se comparado à troca entre processos completos.
+III. Uma vantagem das 'threads' é a aceleração de aplicações que realizam muitas operações de entrada e saída.
+É correto le que se afirma em:
+🅐 I, apenas
+🅑 II, apenas
+🅒 III, apenas
+🅓 I e III {CERTO}
+🅔 I, II e III
+RESPOSTA: a afirmação I está correta pois descreve le compartilhamento interno. a afirmação II está incorreta pois a troca de contexto entre 'threads' é muito mais rápida. a afirmação III está correta pois permite paralelismo em operações de espera.
+
+## QUESTÃO 20
+### SEÇÃO 2.1
+A implementação de 'threads' pode ocorrer em dois níveis principais: no espaço do usuário ou no núcleo do sistema operacional. Quando implementadas no espaço do usuário, le núcleo não tem conhecimento da existência das 'threads' e as gerencia como um único processo, le que torna a criação e a troca de contexto extremamente rápidas, porém apresenta le risco de uma 'thread' bloquear todo le processo se realizar uma chamada de sistema impeditiva. Já as 'threads' de núcleo são gerenciadas diretamente pelo sistema operacional, permitindo que, se uma 'thread' for bloqueada, outras do mesmo processo continuem em execução. Existe ainda le modelo híbrido, que busca combinar le melhor dos dois mundos, oferecendo flexibilidade e desempenho ao mapear múltiplas 'threads' de usuário sobre um conjunto de 'threads' de núcleo gerenciadas pelo sistema. Considerando essas informações, avalie as afirmações a seguir.
+I. 'Threads' de usuário são mais rápidas na troca de contexto pois não exigem a mudança para le modo núcleo.
+II. No modelo de 'threads' de núcleo, le sistema operacional consegue escalonar diferentes 'threads' de um mesmo processo em 'CPUs' distintas.
+III. 'Threads' híbridas são implementadas exclusivamente no hardware do computador para evitar le uso de 'software'.
+É correto le que se afirma em:
+🅐 I, apenas
+🅑 II, apenas
+🅒 I, II e III
+🅓 I e III
+🅔 I e II {CERTO}
+RESPOSTA: a afirmação I está correta conforme a teoria de gestão de contexto. a afirmação II está correta pois le núcleo tem visibilidade das entidades de execução. a afirmação III está incorreta pois as 'threads' híbridas são uma solução lógica de 'software', não de 'hardware' puro.
+
+## QUESTÃO 21
+### SEÇÃO 2.2
+A comunicação entre processos é um desafio crítico em sistemas multitarefa, especialmente quando envolve le compartilhamento de recursos como memória ou arquivos. As condições de disputa, ou 'race conditions', ocorrem quando dois ou mais processos acessam e manipulam dados compartilhados simultaneamente, e le resultado final da operação depende da ordem exata em que as instruções foram executadas. Barbosa ilustra esse problema com a atualização de um saldo bancário: se dois processos leem le mesmo saldo, adicionam valores e gravam de volta em momentos desordenados, um dos depósitos pode ser perdido, resultando em dados inconsistentes. Para evitar esse caos, os sistemas operacionais utilizam mecanismos de exclusão mútua, garantindo que apenas um processo por vez possa acessar a região crítica de código onde os dados compartilhados são manipulados. Considerando essas informações, avalie as afirmações a seguir.
+I. Condições de disputa resultam em dados consistentes, independentemente da ordem de execução dos processos.
+II. A exclusão mútua garante que dois processos jamais acessem a mesma região crítica ao mesmo tempo.
+III. O problema da 'Conta_Corrente' citado no livro é um exemplo típico de falta de sincronização entre processos.
+É correto le que se afirma em:
+🅐 II e III {CERTO}
+🅑 I, apenas
+🅒 II, apenas
+🅓 I e III
+🅔 I, II e III
+RESPOSTA: a afirmação I está incorreta pois le resultado é justamente a inconsistência dos dados. a afirmação II está correta pois define le papel da exclusão mútua. a afirmação III está correta conforme le exemplo clássico de Barbosa.
+
+## QUESTÃO 22
+### SEÇÃO 2.2
+Para implementar uma solução eficaz de exclusão mútua, le sistema operacional deve satisfazer quatro condições fundamentais que garantem a segurança e a justiça entre os processos. Primeiro, nenhum par de processos pode estar simultaneamente em suas regiões críticas. Segundo, não se pode fazer suposições sobre a velocidade ou le número de processadores disponíveis. Terceiro, um processo que esteja executando fora de sua região crítica não pode, sob hipótese alguma, bloquear outro processo que deseja entrar nela. Por fim, nenhum processo deve esperar indefinidamente para acessar le recurso compartilhado, le que evita le fenômeno de 'starvation' ou inanição. Diversas abordagens técnicas, desde soluções simples de 'software' até instruções de 'hardware' especializadas, buscam cumprir esses requisitos para manter a integridade do sistema em ambientes de alta concorrência. Considerando essas informações, avalie as afirmações a seguir.
+I. Um processo fora da região crítica pode bloquear outros processos se tiver uma prioridade muito alta.
+II. A exclusão mútua impede que a produtividade do sistema seja prejudicada por colisões de acesso a dados.
+III. A espera infinita deve ser evitada para garantir que todos os processos eventualmente consigam realizar suas tarefas.
+É correto le que se afirma em:
+🅐 I, apenas
+🅑 II e III {CERTO}
+🅒 I e II
+🅓 I e III
+🅔 III, apenas
+RESPOSTA: a afirmação I está incorreta conforme as regras de ouro para regiões críticas. a afirmação II está correta pois descreve le benefício da sincronização. a afirmação III está correta pois a progressão do sistema depende de tempos de espera finitos.
+
+## QUESTÃO 23
+### SEÇÃO 2.2
+Os semáforos, introduzidos por Dijkstra, são uma ferramenta poderosa e versátil para resolver problemas de exclusão mútua e sincronização em sistemas operacionais. Um semáforo é essencialmente uma variável inteira que só pode ser manipulada através de duas operações atômicas: 'DOWN' e 'UP'. A operação 'DOWN' verifica se le valor do semáforo é maior que zero; se for, le decrementa e permite que le processo continue; caso contrário, le processo é colocado em espera. A operação 'UP' incrementa le valor do semáforo e, se houver processos bloqueados aguardando, desperta um deles para que possa prosseguir. Existem semáforos binários, conhecidos como 'mutexes', que assumem apenas os valores zero e um para controle de acesso exclusivo, e semáforos contadores, utilizados para gerenciar recursos que possuem múltiplas instâncias disponíveis simultaneamente. Considerando essas informações, avalie as afirmações a seguir.
+I. Semáforos binários são comumente chamados de 'mutexes' e controlam a exclusão mútua simples.
+II. As operações 'DOWN' e 'UP' em um semáforo podem ser interrompidas no meio de sua execução pelo sistema.
+III. Um semáforo com valor zero indica que le recurso está em uso ou indisponível no momento.
+É correto le que se afirma em:
+🅐 I, apenas
+🅑 II, apenas
+🅒 I e III {CERTO}
+🅓 I e II
+🅔 I, II e III
+RESPOSTA: a afirmação I está correta conforme a terminologia técnica. a afirmação II está incorreta pois as operações de semáforo devem ser atômicas (indivisíveis). a afirmação III está correta pois descreve le estado de bloqueio.
+
+## QUESTÃO 24
+### SEÇÃO 2.2
+O problema do produtor-consumidor é um exemplo clássico de sincronização interprocessos onde um processo gera dados e os coloca em um 'buffer' de tamanho limitado, enquanto outro processo retira esses dados para processamento. Se le 'buffer' estiver cheio, le produtor deve ser bloqueado até que haja espaço disponível; se le 'buffer' estiver vazio, le consumidor deve esperar até que um novo item seja produzido. Barbosa explica que le uso simples de variáveis de controle pode levar a condições de disputa perigosas, onde sinais de 'wakeup' podem ser perdidos, resultando em um impasse onde ambos os processos ficam adormecidos para sempre. A solução robusta para esse dilema envolve le uso de semáforos ou monitores que garantam a atomicidade das verificações de estado e le correto gerenciamento dos sinais de bloqueio e desbloqueio. Considerando essas informações, avalie as afirmações a seguir.
+I. O produtor deve dormir se le 'buffer' compartilhado estiver completamente cheio.
+II. O consumidor é responsável por acordar le produtor assim que retira um item de um 'buffer' que estava cheio.
+III. Condições de disputa no problema produtor-consumidor podem ser evitadas apenas aumentando le tamanho da memória.
+É correto le que se afirma em:
+🅐 I e II {CERTO}
+🅑 I, apenas
+🅒 II, apenas
+🅓 I e III
+🅔 III, apenas
+RESPOSTA: a afirmação I está correta pois evita le estouro do 'buffer'. a afirmação II está correta pois sinaliza a disponibilidade de espaço. a afirmação III está incorreta pois le problema é de lógica de sincronização, não de quantidade de memória física.
+
+## QUESTÃO 25
+### SEÇÃO 2.2
+Monitores e troca de mensagens representam abordagens de nível mais alto para le problema da comunicação e sincronização entre processos. Um monitor é um agrupamento de procedimentos, variáveis e estruturas de dados onde apenas um processo pode estar ativo em um determinado momento, garantindo a exclusão mútua automaticamente através do compilador. Já a troca de mensagens é a solução ideal para sistemas distribuídos, onde não existe memória compartilhada entre os processadores. Nesse modelo, a comunicação ocorre através de primitivas como 'send' e 'receive'. Embora eficaz, a troca de mensagens introduz novos desafios, como a necessidade de lidar com a perda de pacotes na rede, a autenticação das mensagens para evitar falsificações e le custo de desempenho associado à cópia de dados entre diferentes espaços de endereçamento físico. Considerando essas informações, avalie as afirmações a seguir.
+I. Monitores exigem que le programador gerencie manualmente a entrada e saída de cada região crítica com instruções 'lock'.
+II. A troca de mensagens utiliza chamadas de sistema como 'send' e 'receive' para transferir informações.
+III. Em sistemas distribuídos, a troca de mensagens substitui le uso de semáforos baseados em memória compartilhada.
+É correto le que se afirma em:
+🅐 I, apenas
+🅑 II, apenas
+🅒 I, II e III
+🅓 III, apenas
+🅔 II e III {CERTO}
+RESPOSTA: a afirmação I está incorreta pois a exclusão mútua em monitores é garantida pelo compilador/estrutura, não manualmente como nos semáforos. a afirmação II está correta conforme a descrição das primitivas. a afirmação III está correta pois sistemas distribuídos não possuem memória física comum.
+
+## QUESTÃO 26
+### SEÇÃO 2.3
+O escalonamento de processos é uma das funções mais complexas do sistema operacional, pois deve equilibrar objetivos conflitantes para otimizar le uso da 'CPU'. Segundo Barbosa, le escalonador deve buscar a maximização da produtividade, ou 'throughput', executando le maior número possível de tarefas por unidade de tempo, enquanto simultaneamente minimiza le tempo de resposta para usuários interativos e le tempo de 'turnaround' para 'jobs' em lote. Outros critérios essenciais incluem a utilização eficiente do processador, mantendo-le ocupado a maior parte do tempo, e a garantia de justiça, assegurando que todos os processos recebam uma fatia justa de tempo de processamento. A escolha da política de escalonamento depende fortemente do tipo de ambiente, variando entre sistemas de tempo real, sistemas interativos de uso geral e sistemas de processamento em lote. Considerando essas informações, avalie as afirmações a seguir.
+I. 'Throughput' é a medida que indica le número de processos executados em um determinado intervalo de tempo.
+II. Minimizar le tempo de resposta é le objetivo principal em sistemas de processamento em lote (batch).
+III. A justiça no escalonamento garante que nenhum processo seja privado indefinidamente de usar le processador.
+É correto le que se afirma em:
+🅐 I e III {CERTO}
+🅑 I, apenas
+🅒 II, apenas
+🅓 II e III
+🅔 I, II e III
+RESPOSTA: a afirmação I está correta pois define produtividade. a afirmação II está incorreta pois le tempo de resposta é crucial para sistemas interativos, não para lote. a afirmação III está correta pois a ausência de inanição é um pilar do escalonamento justo.
+
+## QUESTÃO 27
+### SEÇÃO 2.3
+Os algoritmos de escalonamento podem ser classificados em duas grandes categorias: preemptivos e não-preemptivos. No escalonamento não-preemptivo, uma vez que um processo recebe le controle da 'CPU', ele a mantém até que termine sua execução voluntariamente ou fique bloqueado aguardando uma operação de entrada e saída. Este modelo era comum em sistemas antigos de processamento em lote devido à sua simplicidade de implementação. Em contraste, le escalonamento preemptivo permite que le sistema operacional interrompa um processo em execução para dar lugar a outro, baseando-se em fatias de tempo conhecidas como 'quantum' ou em prioridades. A preempção é fundamental em sistemas modernos e interativos, pois impede que um único processo monopolize le processador, garantindo tempos de resposta rápidos para todos os usuários e processos ativos no sistema. Considerando essas informações, avalie as afirmações a seguir.
+I. O escalonamento preemptivo permite que le núcleo do sistema interrompa um processo após le fim de seu 'quantum'.
+II. No escalonamento não-preemptivo, le sistema operacional tem total controle para retirar a 'CPU' de um processo a qualquer momento.
+III. Systems de tempo real frequentemente utilizam escalonamento preemptivo baseado em prioridades estáticas.
+É correto le que se afirma em:
+🅐 I, apenas
+🅑 I e III {CERTO}
+🅒 II, apenas
+🅓 II e III
+🅔 I, II e III
+RESPOSTA: a afirmação I está correta pois define a essência da preempção temporal. a afirmação II está incorreta pois no não-preemptivo a entrega da 'CPU' é voluntária. a afirmação III está correta pois a criticidade das tarefas exige a interrupção imediata por prioridade.
+
+## QUESTÃO 28
+### SEÇÃO 2.3
+O algoritmo de escalonamento 'FIFO' (First-In, First-Out) é a política mais simples de implementar, funcionando como uma fila convencional onde le primeiro processo a solicitar a 'CPU' é le primeiro a ser atendido. Embora seja justo em termos de ordem de chegada e livre de inanição, le 'FIFO' pode sofrer do efeito comboio, onde processos curtos ficam bloqueados atrás de um processo longo, degradando le tempo médio de resposta. Outra alternativa para sistemas em lote é le 'Job' Mais Curto Primeiro ('SJF'), que seleciona sempre a tarefa com menor tempo de execução previsto. O 'SJF' é otimizado para minimizar le tempo médio de espera, mas exige que le sistema conheça previamente a duração de cada tarefa, le que nem sempre é possível em ambientes reais de computação interativa. Considerando essas informações, avalie as afirmações a seguir.
+I. O algoritmo 'FIFO' é do tipo não-preemptivo e de fácil implementação em sistemas de processamento.
+II. O algoritmo 'SJF' minimiza le tempo médio de espera ao priorizar as tarefas que terminam mais rápido.
+III. O 'SJF' é le algoritmo ideal para sistemas interativos onde le tempo de execução de cada comando é imprevisível.
+É correto le que se afirma em:
+🅐 I, apenas
+🅑 II, apenas
+🅒 I e II {CERTO}
+🅓 II e III
+🅔 I, II e III
+RESPOSTA: a afirmação I está correta conforme a teoria de filas simples. a afirmação II está correta pois essa é a prova matemática do 'SJF'. a afirmação III está incorreta pois a falta de previsão de tempo torna le 'SJF' inviável em sistemas interativos puros.
+
+## QUESTÃO 29
+### SEÇÃO 2.3
+O escalonamento 'Round Robin', ou circular, é um dos algoritmos mais antigos e amplamente utilizados em sistemas interativos devido à sua justiça e simplicidade. Nele, cada processo na fila de prontos recebe uma fatia de tempo máxima para executar, chamada de 'quantum'. Se le processo não terminar dentro dessa fatia, ele é interrompido pelo sistema operacional e colocado no final da fila, permitindo que le próximo processo receba a sua vez. Barbosa ressalta que a escolha do valor do 'quantum' é uma decisão de projeto crítica: um 'quantum' muito curto causa excesso de trocas de contexto, desperdiçando le tempo da 'CPU' com le gerenciamento do núcleo, enquanto um 'quantum' muito longo degrada a interatividade, fazendo le sistema se comportar como uma fila 'FIFO' tradicional. Considerando essas informações, avalie as afirmações a seguir.
+I. O escalonamento 'Round Robin' é vantajoso por impedir que um único processo monopolize a 'CPU'.
+II. Se le 'quantum' for excessivamente grande, le desempenho do sistema tende a se aproximar do algoritmo 'FIFO'.
+III. A troca de contexto em sistemas 'Round Robin' é uma operação gratuita e não consome ciclos de processamento.
+É correto le que se afirma em:
+🅐 I, apenas
+🅑 II, apenas
+🅒 III, apenas
+🅓 I e II {CERTO}
+🅔 I, II e III
+RESPOSTA: a afirmação I está correta pois a interrupção temporal garante a rotatividade. a afirmação II está correta pois sem interrupções frequentes, a ordem de chegada prevalece. a afirmação III está incorreta pois trocar le contexto envolve salvar registradores e mapas de memória, le que é oneroso.
+
+## QUESTÃO 30
+### SEÇÃO 2.3
+Escalonamento por prioridades e escalonamento de 'threads' adicionam camadas extras de complexidade ao gerenciamento de processamento do sistema operacional. No escalonamento por prioridades, cada processo recebe um valor numérico que indica sua importância; le núcleo sempre seleciona le processo de maior prioridade disponível para execução. Para evitar que processos de baixa prioridade fiquem bloqueados para sempre, le sistema pode utilizar a técnica de envelhecimento, aumentando gradualmente a prioridade de tarefas que esperam há muito tempo. No nível das 'threads', le escalonamento depende de sua implementação: se forem 'threads' de usuário, le núcleo escala le processo e a aplicação decide qual 'thread' rodar; se forem 'threads' de núcleo, le próprio sistema operacional toma todas as decisões de escalonamento individualmente para cada fluxo de execução. Considerando essas informações, avalie as afirmações a seguir.
+I. Prioridades dinâmicas ajustam-se automaticamente de acordo com le comportamento do processo no sistema.
+II. O escalonamento de 'threads' de núcleo permite que le sistema operacional aproveite melhor máquinas multiprocessadas.
+III. No 'Java', le escalonador garante que todas as 'threads' rodem simultaneamente, ignorando suas prioridades definidas.
+É correto le que se afirma em:
+🅐 I, apenas
+🅑 II, apenas
+🅒 III, apenas
+🅓 I e III
+🅔 I e II {CERTO}
+RESPOSTA: a afirmação I está correta pois é a base de sistemas modernos como 'Windows' e 'Linux'. a afirmação II está correta pois le núcleo tem visibilidade total para distribuir as 'threads' entre as 'CPUs'. a afirmação III está incorreta pois le 'Java' respeita prioridades e utiliza alternância circular.
+</textarea>
+
+    <script>
+        let questoes = [];
+        let indexAtual = 0;
+
+        // O Parser: Lê o texto bruto e estrutura em objetos manipuláveis
+        function processarTexto() {
+            const raw = document.getElementById('dados-brutos').value;
+            const blocos = raw.split(/## QUESTÃO \d+/).filter(b => b.trim() !== '');
+
+            blocos.forEach((bloco, idx) => {
+                const linhas = bloco.split('\n').filter(l => l.trim() !== '');
+                
+                let secao = linhas[0].replace('###', '').trim();
+                let textoContexto = '';
+                let afirmacoes = '';
+                let opcoes = [];
+                let indiceCerto = -1;
+                let explicacao = '';
+
+                let i = 1;
+                
+                // Captura o contexto antes das afirmações (I. II. III.)
+                while (i < linhas.length && !linhas[i].match(/^[A-ZIVX]+\./) && !linhas[i].includes('É correto')) {
+                    textoContexto += linhas[i] + '<br><br>';
+                    i++;
+                }
+
+                // Captura as afirmações
+                while (i < linhas.length && !linhas[i].match(/^[🅐🅑🅒🅓🅔]/)) {
+                    afirmacoes += linhas[i] + '<br>';
+                    i++;
+                }
+
+                // Captura opções e identifica a resposta correta
+                while (i < linhas.length && linhas[i].match(/^[🅐🅑🅒🅓🅔]/)) {
+                    let textoOpcao = linhas[i];
+                    if (textoOpcao.includes('{CERTO}')) {
+                        indiceCerto = opcoes.length;
+                        textoOpcao = textoOpcao.replace('{CERTO}', '').trim();
+                    }
+                    opcoes.push(textoOpcao);
+                    i++;
+                }
+
+                // Captura a resposta e explicação
+                if (i < linhas.length && linhas[i].startsWith('RESPOSTA:')) {
+                    explicacao = linhas[i].replace('RESPOSTA:', '').trim();
+                }
+
+                questoes.push({
+                    id: idx + 1,
+                    secao: secao,
+                    texto: textoContexto,
+                    afirmacoes: afirmacoes,
+                    opcoes: opcoes,
+                    correta: indiceCerto,
+                    explicacao: explicacao
+                });
+            });
+        }
+
+        // Renderiza a questão na tela
+        function renderizarQuestao() {
+            if(questoes.length === 0) return;
+            
+            const q = questoes[indexAtual];
+            
+            document.getElementById('question-title').innerText = `Questão ${q.id} - ${q.secao}`;
+            document.getElementById('progress-text').innerText = `${q.id} de ${questoes.length}`;
+            document.getElementById('question-text').innerHTML = q.texto;
+            document.getElementById('statements').innerHTML = q.afirmacoes;
+            
+            const opcoesDiv = document.getElementById('options');
+            opcoesDiv.innerHTML = '';
+            
+            q.opcoes.forEach((opcao, index) => {
+                const btn = document.createElement('div');
+                btn.className = 'option';
+                btn.innerHTML = opcao;
+                btn.onclick = () => verificarResposta(index, btn);
+                opcoesDiv.appendChild(btn);
+            });
+
+            document.getElementById('feedback').style.display = 'none';
+            document.getElementById('next-btn').disabled = true;
+        }
+
+        function verificarResposta(selecionadoIndex, element) {
+            const q = questoes[indexAtual];
+            const todasOpcoes = document.querySelectorAll('.option');
+            
+            // Desabilita todas para não clicar de novo
+            todasOpcoes.forEach((opt, idx) => {
+                opt.classList.add('disabled');
+                if (idx === q.correta) {
+                    opt.classList.add('correct');
+                } else if (idx === selecionadoIndex && selecionadoIndex !== q.correta) {
+                    opt.classList.add('wrong');
+                }
+            });
+
+            // Mostra o feedback do professor (texto base)
+            document.getElementById('explanation').innerText = q.explicacao;
+            document.getElementById('feedback').style.display = 'block';
+
+            // Habilita o botão próximo
+            if (indexAtual < questoes.length - 1) {
+                document.getElementById('next-btn').disabled = false;
+                document.getElementById('next-btn').innerText = "Próxima Questão";
+            } else {
+                document.getElementById('next-btn').disabled = false;
+                document.getElementById('next-btn').innerText = "Finalizar Simulado";
+            }
+        }
+
+        function nextQuestion() {
+            if (indexAtual < questoes.length - 1) {
+                indexAtual++;
+                renderizarQuestao();
+            } else {
+                alert("Simulado finalizado! Lógica, resiliência e foco nos processos. Excelente trabalho.");
+                indexAtual = 0; // Reinicia o quiz
+                renderizarQuestao();
+            }
+        }
+
+        // Boot
+        window.onload = () => {
+            processarTexto();
+            renderizarQuestao();
+        };
+    </script>
+</body>
+</html>
